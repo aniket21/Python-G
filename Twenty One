@@ -1,0 +1,172 @@
+import random
+suits=['c','d','h','s']
+ranks=['a','2','3','4','5','6','7','8','9','10','j','q','k']
+class Card:
+    def __init__(self,suit,rank,rankval):
+        self.suit=suit
+        self.rank=rank
+        self.rankval=rankval
+    def rank_val(self):
+        rv={'a':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,'j':10,'q':10,'k':10}
+        rank=str(self.rank)
+        self.rankval=rv[rank]
+        return self.rankval
+    def returnc(self):
+        print 'suit %s   rank %s   points %d' %(self.suit,self.rank,self.rankval)   
+class Deck:
+    def __init__(self):
+        self.deck=[]
+        for a1 in suits:
+            for b1 in ranks:
+                cardc=Card(a1,b1,'')
+                m=cardc.rank_val()
+                self.deck.append(Card(a1,b1,m))
+        random.shuffle(self.deck)
+    def prinit(self):
+        for i in range(1,52):
+            ha=self.deck[i]
+            ha.rank_val()
+            ha.returnc()
+de_ck=Deck()
+class Player:
+    def __init__(self,cardpoints,total_money):
+        self.cardpoints=cardpoints
+        self.total_money=total_money
+    def show(self):
+        print self.cardpoints
+def playgame():
+    a=0
+    b=''
+    win=4
+    print 'Lets distribute the cards'
+    player=Player(0,0)
+    dealer=Player(0,0)
+    playerdeck=[]
+    dealerdeck=[]
+    m1=Card('h','a',1)
+    m1=de_ck.deck.pop()
+    playerdeck.append(m1)
+    player.cardpoints+=m1.rankval
+    print 'Player gets'
+    m1.returnc()
+    print 'Player points are %d' %(player.cardpoints)
+    print '\n'
+    m2=Card('h','k',10)
+    m2=de_ck.deck.pop()
+    dealerdeck.append(m2)
+    dealer.cardpoints+=m2.rankval
+    m3=Card('s','a',1)
+    m3=de_ck.deck.pop()
+    playerdeck.append(m3)
+    player.cardpoints+=m3.rankval
+    print 'Player gets'
+    m3.returnc()
+    print 'Player points are %d' %(player.cardpoints)
+    print '\n'
+    m4=Card('h','q',10)
+    m4=de_ck.deck.pop()
+    dealerdeck.append(m4)
+    dealer.cardpoints+=m4.rankval
+    while a==0:
+        ha=''
+        ha=raw_input('does player want to hit or stand')
+        if ha=='hit':
+            m5=Card(1,1,1)
+            m5=de_ck.deck.pop()
+            playerdeck.append(m5)
+            player.cardpoints+=m5.rankval
+            print 'player gets'
+            m5.returnc()
+            print 'player points %d' %(player.cardpoints)
+            if player.cardpoints>21:
+                print 'player busts by default dealer wins'
+                print 'player points were %d' %(player.cardpoints)
+                return 1
+                a=1
+                break
+        if ha=='stand':
+            if player.cardpoints>dealer.cardpoints:
+                print 'player wins'
+                print 'player points and dealer points respectively were %d and %d' %(player.cardpoints,dealer.cardpoints)
+                return 2
+                a=1
+                break
+            elif player.cardpoints==dealer.cardpoints:
+                print 'draw!!!!!'
+                print 'player points %d    dealer points %d   ' %(player.cardpoints,dealer.cardpoints)
+                return 3
+                a=1
+                break
+            else:
+                k=0
+                t=0
+                t1=0
+                for cards in playerdeck:
+                    if playerdeck[k].rankval==1 and player.cardpoints<=11:
+                        player.cardpoints+=10
+                        print 'due to ace situation ace is counted as 11'
+                        print 'player points are %d' %(player.cardpoints)
+                        if player.cardpoints>dealer.cardpoints:
+                            print 'player wins'
+                            print 'player points %d      dealer points %d' %(player.cardpoints,dealer.cardpoints)
+                            return 2
+                        if dealer.cardpoints>player.cardpoints:
+                            print 'dealer wins'
+                            print 'player points are %d    and dealer points are %d'%(player.cardpoints,dealer.cardpoints)
+                            a=1
+                            t=1
+                            t1=1
+                            break
+                    k=k+1
+                if t1==1:
+                    break
+                if t==0:
+                    print 'dealer wins'
+                    print 'dealer points were %d and your points were %d' %(dealer.cardpoints,player.cardpoints)
+                    return 1
+                    a=1
+                    break
+        m6=Card(1,1,1)
+        m6=de_ck.deck.pop()
+        dealerdeck.append(m6)
+        dealer.cardpoints+=m6.rankval
+        if dealer.cardpoints>21:
+            print 'dealer busts by default player wins'
+            print 'dealer points were %d' %(dealer.cardpoints)
+            return 2
+            a=1
+            break
+cash=raw_input('Enter how many chips you have')
+cash=int(cash)
+print 'for each win you get double your bet and for each loss you lose the number of chips you bet'
+print 'if it is a draw you get your chips back'
+player=Player(0,cash)
+print 'your total money %d' %(player.total_money)
+ch='y'
+while ch=='y':
+    betmoney=raw_input('enter no of chips you want to bet')
+    betmoney=int(betmoney)
+    player.total_money-=betmoney
+    print 'your balance is %d' %(player.total_money)
+    ja=playgame()
+    if ja==1:
+        print 'you lose your chips'
+        player.total_money-=0
+        print 'Chips remaining %d' %(player.total_money)
+        ch=raw_input('Do you want to continue press y/n')
+        if ch=='n':
+            break
+    if ja==2:
+        print 'you win double your chips'
+        player.total_money+=2*betmoney
+        print 'Chips remaining %d' %(player.total_money)
+        ch=raw_input('Do you want to continue press y/n')
+        if ch=='n':
+            break
+    if ja==3:
+        print 'You get your chips back'
+        player.total_money+=betmoney
+        print 'Chips remaining %d' %(player.total_money)
+        ch=raw_input('Do you want to continue press y/n')
+        if ch=='n':
+            break
